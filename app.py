@@ -7,7 +7,6 @@ import hashlib
 import sqlite3
 import os
 import pandas as pd
-import plotly.express as px
 import time
 
 from dotenv import load_dotenv
@@ -1094,43 +1093,108 @@ elif menu == "Analytics":
 
     total_projects = cursor.fetchone()[0]
 
-    col1, col2 = st.columns(2)
+    cursor.execute("""
+    SELECT AVG(score)
+    FROM projects
+    """)
+
+    avg_score = cursor.fetchone()[0]
+
+    if avg_score is None:
+        avg_score = 0
+
+    col1, col2, col3 = st.columns(3)
 
     with col1:
 
-        st.metric(
-            "👤 Total Users",
-            total_users
-        )
+        st.markdown(f"""
+        <div class="card" style="
+        text-align:center;
+        height:180px;
+        ">
+
+        <h1 style="font-size:50px;">👤</h1>
+
+        <h2>Total Users</h2>
+
+        <h1 style="
+        color:#38bdf8;
+        ">
+        {total_users}
+        </h1>
+
+        </div>
+        """, unsafe_allow_html=True)
 
     with col2:
 
-        st.metric(
-            "📂 Total Projects",
-            total_projects
-        )
+        st.markdown(f"""
+        <div class="card" style="
+        text-align:center;
+        height:180px;
+        ">
 
-    df = pd.DataFrame({
-        "Category": [
-            "Users",
-            "Projects"
-        ],
-        "Count": [
-            total_users,
-            total_projects
-        ]
-    })
+        <h1 style="font-size:50px;">📂</h1>
 
-    fig = px.bar(
-        df,
-        x="Category",
-        y="Count"
-    )
+        <h2>Total Projects</h2>
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
+        <h1 style="
+        color:#38bdf8;
+        ">
+        {total_projects}
+        </h1>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
+
+        st.markdown(f"""
+        <div class="card" style="
+        text-align:center;
+        height:180px;
+        ">
+
+        <h1 style="font-size:50px;">📈</h1>
+
+        <h2>Average Score</h2>
+
+        <h1 style="
+        color:#38bdf8;
+        ">
+        {round(avg_score, 1)}
+        </h1>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="card">
+
+    <h2 style="
+    color:white;
+    ">
+    🚀 Platform Insights
+    </h2>
+
+    <br>
+
+    ✅ AI Documentation Generation Active <br><br>
+
+    ✅ Repository Analysis System Running <br><br>
+
+    ✅ PDF Export System Enabled <br><br>
+
+    ✅ Admin Monitoring Enabled <br><br>
+
+    ✅ User Authentication Active <br><br>
+
+    ✅ Real-Time Analytics Working
+
+    </div>
+    """, unsafe_allow_html=True)
 
 # =========================================================
 # HISTORY
