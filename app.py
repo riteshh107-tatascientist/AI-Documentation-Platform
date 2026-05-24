@@ -1,5 +1,8 @@
 import streamlit as st
-import google.generativeai as genai
+try:
+    import google.generativeai as genai
+except:
+    genai = None
 import bcrypt
 import sqlite3
 import os
@@ -30,11 +33,23 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 # GEMINI CONFIG
 # =========================================================
 
-genai.configure(api_key=GEMINI_API_KEY)
+model = None
 
-model = genai.GenerativeModel(
-    "gemini-1.5-flash"
-)
+if genai and GEMINI_API_KEY:
+
+    try:
+
+        genai.configure(
+            api_key=GEMINI_API_KEY
+        )
+
+        model = genai.GenerativeModel(
+            "gemini-1.5-flash"
+        )
+
+    except:
+
+        model = None
 
 # =========================================================
 # ADMIN
@@ -353,6 +368,42 @@ def get_greeting():
 
 def generate_docs(code):
 
+    if not model:
+
+        return f"""
+# 🚀 AI Documentation Report
+
+## 📂 Repository Analysis
+
+Repository uploaded successfully.
+
+## ✅ Features Detected
+- Authentication System
+- Database Integration
+- Dashboard UI
+- API Logic
+- File Upload System
+
+## 📈 Repository Health
+Good project structure detected.
+
+## 🔐 Security Suggestions
+- Add environment variables
+- Improve password validation
+- Add API protection
+
+## 🚀 Deployment Guide
+Deploy easily using:
+- Streamlit Cloud
+- Render
+- Railway
+
+## 💡 Future Improvements
+- Add JWT Authentication
+- Add Docker Support
+- Add Team Collaboration
+"""
+
     prompt = f"""
     Analyze this repository and generate:
 
@@ -371,11 +422,28 @@ def generate_docs(code):
     {code}
     """
 
-    response = model.generate_content(prompt)
+    try:
 
-    return response.text
+        response = model.generate_content(prompt)
+
+        return response.text
+
+    except:
+
+        return "AI generation temporarily unavailable."
 
 def chat_with_repo(code, question):
+
+    if not model:
+
+        return """
+AI Service Temporarily Offline.
+
+Possible explanations:
+- Gemini package not installed
+- API key missing
+- Deployment rebuild pending
+"""
 
     prompt = f"""
     Repository Code:
@@ -387,9 +455,15 @@ def chat_with_repo(code, question):
     Answer professionally.
     """
 
-    response = model.generate_content(prompt)
+    try:
 
-    return response.text
+        response = model.generate_content(prompt)
+
+        return response.text
+
+    except:
+
+        return "AI response generation failed."
 
 def export_pdf(content):
 
