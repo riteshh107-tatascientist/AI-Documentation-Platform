@@ -6,14 +6,11 @@ import time
 
 from datetime import datetime
 
-from reportlab.platypus import (
-    SimpleDocTemplate,
-    Paragraph,
-    Spacer
-)
-
-from reportlab.lib.styles import getSampleStyleSheet
-
+try:
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet
+except:
+    SimpleDocTemplate = None
 # =========================================================
 # NO EXTERNAL DEPENDENCY VERSION
 # =========================================================
