@@ -436,21 +436,10 @@ Possible explanations:
 
 def export_pdf(content):
 
-    filename = "documentation.pdf"
+    filename = "documentation.txt"
 
-    doc = SimpleDocTemplate(filename)
-
-    styles = getSampleStyleSheet()
-
-    story = []
-
-    story.append(
-        Paragraph(content, styles['BodyText'])
-    )
-
-    story.append(Spacer(1, 12))
-
-    doc.build(story)
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(content)
 
     return filename
 
@@ -1006,8 +995,8 @@ elif menu == "Dashboard":
                         st.download_button(
                             label="📥 Download PDF",
                             data=file,
-                            file_name="documentation.pdf",
-                            mime="application/pdf"
+                            file_name="documentation.txt",
+                            mime="text/plain"
                         )
 
 # =========================================================
