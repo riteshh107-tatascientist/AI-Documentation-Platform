@@ -1,15 +1,9 @@
 import streamlit as st
-try:
-    import google.generativeai as genai
-except:
-    genai = None
 import hashlib
 import sqlite3
-import os
 import pandas as pd
 import time
 
-from dotenv import load_dotenv
 from datetime import datetime
 
 from reportlab.platypus import (
@@ -21,34 +15,12 @@ from reportlab.platypus import (
 from reportlab.lib.styles import getSampleStyleSheet
 
 # =========================================================
-# LOAD ENV
+# NO EXTERNAL DEPENDENCY VERSION
 # =========================================================
 
-load_dotenv()
-
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-# =========================================================
-# GEMINI CONFIG
-# =========================================================
+GEMINI_API_KEY = ""
 
 model = None
-
-if genai and GEMINI_API_KEY:
-
-    try:
-
-        genai.configure(
-            api_key=GEMINI_API_KEY
-        )
-
-        model = genai.GenerativeModel(
-            "gemini-1.5-flash"
-        )
-
-    except:
-
-        model = None
 
 # =========================================================
 # ADMIN
@@ -76,7 +48,7 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     email TEXT UNIQUE,
-    password BLOB,
+    password TEXT,
     role TEXT,
     is_banned INTEGER,
     warnings INTEGER,
@@ -98,6 +70,9 @@ CREATE TABLE IF NOT EXISTS projects (
 """)
 
 conn.commit()
+
+
+
 
 # =========================================================
 # PAGE CONFIG
