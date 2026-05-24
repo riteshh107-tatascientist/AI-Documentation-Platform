@@ -3,7 +3,7 @@ try:
     import google.generativeai as genai
 except:
     genai = None
-import bcrypt
+import hashlib
 import sqlite3
 import os
 import pandas as pd
@@ -341,17 +341,15 @@ if "user_role" not in st.session_state:
 
 def hash_password(password):
 
-    return bcrypt.hashpw(
-        password.encode(),
-        bcrypt.gensalt()
-    )
+    return hashlib.sha256(
+        password.encode()
+    ).hexdigest()
 
 def verify_password(password, hashed):
 
-    return bcrypt.checkpw(
-        password.encode(),
-        hashed
-    )
+    return hashlib.sha256(
+        password.encode()
+    ).hexdigest() == hashed
 
 def get_greeting():
 
